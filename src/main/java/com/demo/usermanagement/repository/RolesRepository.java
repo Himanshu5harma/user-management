@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface RolesRepository extends JpaRepository<Role, Long> {
     List<Role> findAll();
+    Optional<Role> findByName(String name);
     Role save(Role role);
     void deleteById(Long id);
     Optional<Role> findById(Long id);

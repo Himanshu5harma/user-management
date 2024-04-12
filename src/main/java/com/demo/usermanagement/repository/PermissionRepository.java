@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface PermissionRepository extends JpaRepository<Permission, Long> {
     List<Permission> findAll();
+    Optional<Permission> findByName(String name);
     Permission save(Permission permission);
     void deleteById(Long id);
     Optional<Permission> findById(Long id);

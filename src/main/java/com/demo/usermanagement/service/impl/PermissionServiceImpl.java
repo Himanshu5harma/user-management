@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +30,10 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public Permission createPermission(Permission permission) {
+        Optional<Permission> checkPermission = permissionRepository.findByName(permission.getName());
+        if(checkPermission.isPresent()){
+            throw  new RuntimeException("Permission Already Exist With Same Name.");
+        }
         return permissionRepository.save(permission);
     }
 

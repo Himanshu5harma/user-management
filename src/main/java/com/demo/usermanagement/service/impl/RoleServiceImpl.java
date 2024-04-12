@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -57,6 +58,13 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role createRole(Role role) {
+        if(role.getId() == null){
+            Optional<Role> checkRole = rolesRepository.findByName(role.getName());
+            if(checkRole.isPresent()){
+                throw new RuntimeException("A Role already exist with same Name");
+            }
+        }
+
         return rolesRepository.save(role);
     }
 

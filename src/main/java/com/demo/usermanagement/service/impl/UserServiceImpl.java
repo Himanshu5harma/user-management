@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The type User service.
@@ -42,8 +43,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity createUser(UserEntity user) {
         if(user.getId() == null) {
+            Optional<UserEntity> userEntity = userRepository.findByUserName(user.getUserName());
+            if(userEntity.isPresent()){
+                throw new RuntimeException("User Name already Taken.");
+            }
             user.setPassword(encoder.encode(user.getPassword()));
         }
+
 //        user.setPassword(encoder.encode("test"));
         return userRepository.save(user);
     }
