@@ -2,6 +2,8 @@ package com.demo.usermanagement.controller;
 
 import com.demo.usermanagement.model.UserEntity;
 import com.demo.usermanagement.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     /**
      * Get all users list.
@@ -26,6 +29,7 @@ public class UserController {
      */
     @GetMapping("/find-all")
     public List<UserEntity> getAllUsers(){
+        logger.info("Received request at endpoint: /api/v1/users/find-all");
         return userService.getAllUsers();
     }
 
@@ -37,6 +41,7 @@ public class UserController {
      */
     @GetMapping("/{id}")
     public UserEntity getUser(@PathVariable Long id){
+        logger.info("Received request at endpoint: /api/v1/users/{}",id);
         return userService.getUserById(id);
     }
 
@@ -48,6 +53,7 @@ public class UserController {
      */
     @GetMapping("/user-Name/{userName}")
     public UserEntity getUser(@PathVariable String userName){
+        logger.info("Received request at endpoint: /api/v1/users/user-Name/{}",userName);
         return userService.getUserByUserName(userName);
     }
 
@@ -59,6 +65,7 @@ public class UserController {
      */
     @PostMapping("/add-user")
     public UserEntity createUser(@RequestBody UserEntity user){
+        logger.info("Received request at endpoint: /api/v1/users/add-user");
         return  userService.createUser(user);
     }
 

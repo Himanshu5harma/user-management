@@ -3,6 +3,8 @@ package com.demo.usermanagement.controller;
 import com.demo.usermanagement.model.AuthRequest;
 import com.demo.usermanagement.model.AuthResponse;
 import com.demo.usermanagement.utils.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +33,8 @@ public class AuthController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    private final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
     /**
      * Create authentication token response entity.
      *
@@ -45,12 +49,13 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
+            logger.error("Incorrect username or password");
             throw new Exception("Incorrect username or password", e);
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);
-
+        logger.info("User Authenticated Successfully.");
         return ResponseEntity.ok(new AuthResponse(jwt));
     }
 }

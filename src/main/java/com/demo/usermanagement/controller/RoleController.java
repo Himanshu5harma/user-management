@@ -3,6 +3,8 @@ package com.demo.usermanagement.controller;
 import com.demo.usermanagement.model.Permission;
 import com.demo.usermanagement.model.Role;
 import com.demo.usermanagement.service.RoleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,8 @@ public class RoleController {
     @Autowired
     RoleService roleService;
 
+    private final Logger logger = LoggerFactory.getLogger(RoleController.class);
+
     /**
      * Get all roles list.
      *
@@ -30,6 +34,7 @@ public class RoleController {
      */
     @GetMapping("/find-all")
     public List<Role> getAllRoles(){
+        logger.info("Received request at endpoint: /api/v1/roles/find-all");
         return roleService.getAllRoles();
     }
 
@@ -40,6 +45,7 @@ public class RoleController {
      */
     @GetMapping("/find-all-roles-permissions")
     public Map<String, Object> getAllRolesPermissions(){
+        logger.info("Received request at endpoint: /api/v1/roles/find-all-roles-permissions");
         return roleService.getAllRolesPermissions();
     }
 
@@ -51,6 +57,7 @@ public class RoleController {
      */
     @PostMapping("/add-permission")
     public Permission createPermission(@RequestBody Permission permission){
+        logger.info("Received request at endpoint: /api/v1/roles/add-permissions");
         return  roleService.createPermission(permission);
     }
 
@@ -62,6 +69,7 @@ public class RoleController {
      */
     @PostMapping("/create-role")
     public Role createRole(@RequestBody Role role){
+        logger.info("Received request at endpoint: /api/v1/roles/create-role");
         return  roleService.createRole(role);
     }
 
@@ -73,6 +81,7 @@ public class RoleController {
      */
     @DeleteMapping("/delete-role/{id}")
     public Map<String, Object> deleteRole(@PathVariable Long id){
+        logger.info("Received request at endpoint: /api/v1/roles/delete-role/{}",id);
         roleService.deleteById(id);
         return roleService.getAllRolesPermissions();
     }
