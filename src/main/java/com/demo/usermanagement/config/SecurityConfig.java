@@ -24,51 +24,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
- * The type Security config.
+ * This class represents the security configuration for the application.
  */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-
+    /**
+     * The JWT request filter used for authentication.
+     */
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
-
-    /**
-     * Api filter chain security filter chain.
-     *
-     * @param http the http
-     * @return the security filter chain
-     * @throws Exception the exception
-     */
-    @Bean
-    @Order(2)
-    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.securityMatcher("api/v1/")
-                .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll()
-                ).addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class).httpBasic(withDefaults());
-        return http.build();
-    }
-
-    /**
-     * Form login filter chain security filter chain.
-     *
-     * @param http the http
-     * @return the security filter chain
-     * @throws Exception the exception
-     */
-    @Bean
-    public SecurityFilterChain formLoginFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.securityMatcher("api/v1/**").authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().authenticated()
-                ).addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class).httpBasic(withDefaults())
-                .formLogin(withDefaults());
-        return http.build();
-    }
 
     /**
      * Token based login filter chain security filter chain.
@@ -79,39 +46,44 @@ public class SecurityConfig {
      */
     @Bean
     @Order(1)
-    public SecurityFilterChain tokenBasedLoginFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
-        http.securityMatcher("authenticate/**","api/v1/users/add-user").authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll()
+        http.securityMatcher("authenticate/**","api/v1/users/add-user","swagger-ui/**").authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("authenticate/**","api/v1/users/add-user","swagger-ui/**").permitAll()
                 ).sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http.securityMatcher("api/v1/**").authorizeHttpRequests(authorize ->
+                authorize.requestMatchers("api/v1/**").authenticated()
+                        .requestMatchers("api/v1/**").hasAnyRole("admin", "worker","supervisor"))
+                .httpBasic(withDefaults());
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
     /**
-     * Password encoder b crypt password encoder.
+     * Returns a BCryptPasswordEncoder instance with a strength of 10.
      *
-     * @return the b crypt password encoder
+     * @return BCryptPasswordEncoder instance
      */
     @Bean
     public static BCryptPasswordEncoder passwordEncoder(){
-
         return new BCryptPasswordEncoder(10);
     }
 
     /**
-     * Authentication manager authentication manager.
+     * Bean for creating an AuthenticationManager.
      *
-     * @param userDetailsService the user details service
-     * @param passwordEncoder    the password encoder
-     * @param userRepository     the user repository
-     * @return the authentication manager
-     * @throws Exception the exception
+     * @param userDetailsService the service to load user details
+     * @param passwordEncoder    the encoder to encode passwords
+     * @param userRepository     the repository to manage users
+     * @return the created AuthenticationManager
+     * @throws Exception if an error occurs during creation
      */
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder, UserRepository userRepository) throws Exception {
-        AuthenticationProvider authenticationProvider = new UserAuthenticationProvider(userDetailsService,passwordEncoder, userRepository);
+        AuthenticationProvider authenticationProvider =
+                new UserAuthenticationProvider(userDetailsService, passwordEncoder, userRepository);
         return new ProviderManager(authenticationProvider);
     }
 }

@@ -5,6 +5,7 @@ import com.demo.usermanagement.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class UserController {
      *
      * @return the list
      */
+    @PreAuthorize("hasAnyRole('admin','supervisor', 'worker')")
     @GetMapping("/find-all")
     public List<UserEntity> getAllUsers(){
         logger.info("Received request at endpoint: /api/v1/users/find-all");
@@ -39,6 +41,7 @@ public class UserController {
      * @param id the id
      * @return the user entity
      */
+    @PreAuthorize("hasAnyRole('admin','supervisor', 'worker')")
     @GetMapping("/{id}")
     public UserEntity getUser(@PathVariable Long id){
         logger.info("Received request at endpoint: /api/v1/users/{}",id);
@@ -51,6 +54,7 @@ public class UserController {
      * @param userName the user name
      * @return the user entity
      */
+    @PreAuthorize("hasAnyRole('admin','supervisor', 'worker')")
     @GetMapping("/user-Name/{userName}")
     public UserEntity getUser(@PathVariable String userName){
         logger.info("Received request at endpoint: /api/v1/users/user-Name/{}",userName);
@@ -63,6 +67,7 @@ public class UserController {
      * @param user the user
      * @return the user entity
      */
+//    @PreAuthorize("hasAnyRole('admin','supervisor', 'worker')")
     @PostMapping("/add-user")
     public UserEntity createUser(@RequestBody UserEntity user){
         logger.info("Received request at endpoint: /api/v1/users/add-user");

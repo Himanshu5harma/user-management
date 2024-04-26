@@ -6,6 +6,7 @@ import com.demo.usermanagement.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class RoleController {
      *
      * @return the list
      */
+    @PreAuthorize("hasAnyRole('admin','supervisor')")
     @GetMapping("/find-all")
     public List<Role> getAllRoles(){
         logger.info("Received request at endpoint: /api/v1/roles/find-all");
@@ -43,6 +45,7 @@ public class RoleController {
      *
      * @return the map
      */
+    @PreAuthorize("hasAnyRole('admin','supervisor','worker')")
     @GetMapping("/find-all-roles-permissions")
     public Map<String, Object> getAllRolesPermissions(){
         logger.info("Received request at endpoint: /api/v1/roles/find-all-roles-permissions");
@@ -55,6 +58,7 @@ public class RoleController {
      * @param permission the permission
      * @return the permission
      */
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/add-permission")
     public Permission createPermission(@RequestBody Permission permission){
         logger.info("Received request at endpoint: /api/v1/roles/add-permissions");
@@ -67,6 +71,7 @@ public class RoleController {
      * @param role the role
      * @return the role
      */
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/create-role")
     public Role createRole(@RequestBody Role role){
         logger.info("Received request at endpoint: /api/v1/roles/create-role");
@@ -79,6 +84,7 @@ public class RoleController {
      * @param id the id
      * @return the map
      */
+    @PreAuthorize("hasRole('admin')")
     @DeleteMapping("/delete-role/{id}")
     public Map<String, Object> deleteRole(@PathVariable Long id){
         logger.info("Received request at endpoint: /api/v1/roles/delete-role/{}",id);

@@ -5,6 +5,7 @@ import com.demo.usermanagement.service.PermissionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class PermissionController {
      * @return the permission
      */
     @PostMapping("/create-permission")
+    @PreAuthorize("hasRole('admin')")
     public Permission createPermission(@RequestBody Permission permission){
         logger.info("Received request at endpoint: /api/v1/permission/create-permission");
         return  permissionService.createPermission(permission);
@@ -43,6 +45,7 @@ public class PermissionController {
      * @return the list
      */
     @DeleteMapping("/delete-permission/{id}")
+    @PreAuthorize("hasRole('admin')")
     public List<Permission> deletePermission(@PathVariable Long id){
         logger.info("Received request at endpoint: /api/v1/permission/delete-permission/{}",id);
         permissionService.deletePermission(id);
@@ -53,8 +56,9 @@ public class PermissionController {
      * Get all permissions.
      */
     @GetMapping("/find-all")
-    public void getAllPermissions(){
+    @PreAuthorize("hasAnyRole('admin','supervisor')")
+    public List<Permission> getAllPermissions(){
         logger.info("Received request at endpoint: /api/v1/permission/find-all");
-        permissionService.getAllPermissions();
+        return permissionService.getAllPermissions();
     }
 }
