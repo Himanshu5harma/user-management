@@ -36,11 +36,11 @@ public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     /**
-     * Create authentication token response entity.
+     * Creates an authentication token and returns the response entity.
      *
      * @param authenticationRequest the authentication request
      * @return the response entity
-     * @throws Exception the exception
+     * @throws Exception if an error occurs during authentication
      */
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authenticationRequest) throws Exception {

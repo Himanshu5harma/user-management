@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * The type Permission controller.
+ * The Permission Controller class.
  */
 @RestController
 @RequestMapping("api/v1/permission")

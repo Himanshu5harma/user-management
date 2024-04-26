@@ -5,12 +5,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The type Auth request.
+ * This class represents an authentication request.
  */
 @Getter
 @Setter
 @AllArgsConstructor
 public class AuthRequest {
+    /**
+     * The username for the authentication request.
+     */
     private String username;
+
+    /**
+     * The password for the authentication request.
+     */
     private String password;
 }

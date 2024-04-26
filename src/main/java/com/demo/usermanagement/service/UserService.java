@@ -5,37 +5,38 @@ import com.demo.usermanagement.model.UserEntity;
 import java.util.List;
 
 /**
- * The interface User service.
+ * The UserService interface provides methods to interact with the user data.
  */
 public interface UserService {
+
     /**
      * Gets all users.
      *
-     * @return the all users
+     * @return the list of all users
      */
     public List<UserEntity> getAllUsers();
 
     /**
-     * Gets user by id.
+     * Gets a user by their ID.
      *
-     * @param id the id
-     * @return the user by id
+     * @param id the ID of the user
+     * @return the user with the specified ID
      */
     public UserEntity getUserById(Long id);
 
     /**
-     * Gets user by user name.
+     * Gets a user by their username.
      *
-     * @param userName the user name
-     * @return the user by user name
+     * @param userName the username of the user
+     * @return the user with the specified username
      */
     public UserEntity getUserByUserName(String userName);
 
     /**
-     * Create user user entity.
+     * Creates a new user.
      *
-     * @param user the user
-     * @return the user entity
+     * @param user the user object to be created
+     * @return the created user object
      */
     public UserEntity createUser(UserEntity user);
 }

@@ -6,13 +6,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * The type Auth response.
+ * This class represents an Auth response.
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class AuthResponse {
+    /**
+     * The JWT token.
+     */
     private String jwt;
 }
 
